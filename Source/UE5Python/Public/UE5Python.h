@@ -6,6 +6,7 @@
 
 #if PLATFORM_WINDOWS
 #include <include/pyconfig.h>
+#include <include/Python.h>
 #else
 #warning "Unsupported platform"
 #endif
