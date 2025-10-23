@@ -6,7 +6,17 @@
 
 void FUE5PythonModule::StartupModule()
 {
-	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
+	//GConfig->GetString()
+
+	FPaths::ProjectContentDir();
+
+	FString ProjectScriptsPath = FPaths::Combine(FPaths::ProjectContentDir(), UTF8_TO_TCHAR("Scripts"));
+	if (!FPaths::DirectoryExists(ProjectScriptsPath))
+	{
+		FPlatformFileManager::Get().GetPlatformFile().CreateDirectory(*ProjectScriptsPath);
+	}
+	ScriptsPath.Add(ProjectScriptsPath);
+	
 }
 
 void FUE5PythonModule::ShutdownModule()

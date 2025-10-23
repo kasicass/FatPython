@@ -58,7 +58,6 @@ public class UE5Python : ModuleRules
 		System.Console.WriteLine("Using Python at: " + pythonHome);
 		PublicIncludePaths.Add(pythonHome);
 		string libPath = GetWindowsPythonLibFile(pythonHome);
-		PublicLibraryPaths.Add(Path.GetDirectoryName(libPath));
 		PublicAdditionalLibraries.Add(libPath);
 	}
 
