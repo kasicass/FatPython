@@ -11,6 +11,8 @@
 #warning "Unsupported platform"
 #endif
 
+DECLARE_LOG_CATEGORY_EXTERN(LogUE5Python, Log, All);
+
 class FUE5PythonModule : public IModuleInterface
 {
 public:
@@ -21,4 +23,7 @@ public:
 
 public:
 	TArray<FString> ScriptsPath;
+
+private:
+	bool IsPythonVMStarted = false;
 };
