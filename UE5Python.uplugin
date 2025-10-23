@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "UE5Python",
+	"Description": "Python VM on UE5",
+	"Category": "Scripting Language",
+	"CreatedBy": "Kasicass Tang",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "UE5Python",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
