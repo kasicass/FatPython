@@ -19,6 +19,11 @@
 			"Name": "UE5Python",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
-		}
-	]
+		},
+        {
+            "Name": "UE5PythonConsole",
+            "Type": "Editor",
+            "LoadingPhase": "PostDefault"
+        }
+    ]
 }
