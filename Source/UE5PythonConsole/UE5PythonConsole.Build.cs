@@ -38,6 +38,7 @@ public class UE5PythonConsole : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"UnrealEd"
 			}
 			);
 	}

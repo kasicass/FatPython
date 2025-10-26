@@ -4,6 +4,8 @@
 #include "SSimpleSlateWidget.h"
 #include "Widgets/Docking/SDockTab.h"
 #include "Framework/Application/SlateApplication.h"
+#include "Editor/WorkspaceMenuStructure/Public/WorkspaceMenuStructure.h"
+#include "Editor/WorkspaceMenuStructure/Public/WorkspaceMenuStructureModule.h"
 
 #define LOCTEXT_NAMESPACE "FUE5PythonConsoleModule"
 
@@ -20,9 +22,11 @@ TSharedRef<SDockTab> SpawnPythonLog(const FSpawnTabArgs& Args)
 
 void FUE5PythonConsoleModule::StartupModule()
 {
-	//FGlobalTabmanager::Get()->RegisterNomadTabSpawner(UE5PythonConsole::PythonLogTabName,
-	//	);
-	//FOnSpawnTab::CreateStatic(
+	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(UE5PythonConsole::PythonLogTabName, FOnSpawnTab::CreateStatic(&SpawnPythonLog))
+		.SetDisplayName(NSLOCTEXT("UnrealEditor", "PythonLogTab", "Python Console"))
+		.SetTooltipText(NSLOCTEXT("UnrealEditor", "PythonLogTooltipText", "Open the Python Console tab."))
+		.SetGroup( WorkspaceMenu::GetMenuStructure().GetDeveloperToolsLogCategory() )
+		.SetIcon( FSlateIcon(FAppStyle::GetAppStyleSetName(), "Log.TabIcon") );
 	
 	FCoreDelegates::OnPostEngineInit.AddRaw(this, &FUE5PythonConsoleModule::CreatePluginWindow);
 }
