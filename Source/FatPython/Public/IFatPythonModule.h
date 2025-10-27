@@ -18,6 +18,6 @@ class IFatPythonModule : public IModuleInterface
 public:
 	static IFatPythonModule& Get()
 	{
-		return FModuleManager::LoadModuleChecked<IFatPythonModule>("PythonModule");
+		return FModuleManager::LoadModuleChecked<IFatPythonModule>("FatPythonModule");
 	}
 };

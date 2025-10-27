@@ -21,7 +21,7 @@
 			"LoadingPhase": "Default"
 		},
         {
-            "Name": "UE5PythonConsole",
+            "Name": "FatPythonConsole",
             "Type": "Editor",
             "LoadingPhase": "PostDefault"
         }

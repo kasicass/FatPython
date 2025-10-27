@@ -1,18 +1,15 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "UE5PythonConsole.h"
+#include "FatPythonConsoleModule.h"
 #include "SSimpleSlateWidget.h"
 #include "Widgets/Docking/SDockTab.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Editor/WorkspaceMenuStructure/Public/WorkspaceMenuStructure.h"
 #include "Editor/WorkspaceMenuStructure/Public/WorkspaceMenuStructureModule.h"
 
-#define LOCTEXT_NAMESPACE "FUE5PythonConsoleModule"
+#define LOCTEXT_NAMESPACE "FFatPythonConsoleModule"
 
-namespace UE5PythonConsole
-{
-	static const FName PythonLogTabName(TEXT("PythonLog"));
-}
+static const FName FatPythonLogTabName(TEXT("FatPythonLog"));
 
 TSharedRef<SDockTab> SpawnPythonLog(const FSpawnTabArgs& Args)
 {
@@ -20,18 +17,18 @@ TSharedRef<SDockTab> SpawnPythonLog(const FSpawnTabArgs& Args)
 		//.Icon(FAppStyle::GetBrush("Log.TabIcon"));
 }
 
-void FUE5PythonConsoleModule::StartupModule()
+void FFatPythonConsoleModule::StartupModule()
 {
-	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(UE5PythonConsole::PythonLogTabName, FOnSpawnTab::CreateStatic(&SpawnPythonLog))
+	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(FatPythonLogTabName, FOnSpawnTab::CreateStatic(&SpawnPythonLog))
 		.SetDisplayName(NSLOCTEXT("UnrealEditor", "PythonLogTab", "Python Console"))
 		.SetTooltipText(NSLOCTEXT("UnrealEditor", "PythonLogTooltipText", "Open the Python Console tab."))
 		.SetGroup( WorkspaceMenu::GetMenuStructure().GetDeveloperToolsLogCategory() )
 		.SetIcon( FSlateIcon(FAppStyle::GetAppStyleSetName(), "Log.TabIcon") );
 	
-	FCoreDelegates::OnPostEngineInit.AddRaw(this, &FUE5PythonConsoleModule::CreatePluginWindow);
+	FCoreDelegates::OnPostEngineInit.AddRaw(this, &FFatPythonConsoleModule::CreatePluginWindow);
 }
 
-void FUE5PythonConsoleModule::ShutdownModule()
+void FFatPythonConsoleModule::ShutdownModule()
 {
 	if (PluginWindow.IsValid())
 	{
@@ -39,7 +36,7 @@ void FUE5PythonConsoleModule::ShutdownModule()
 	}
 }
 
-void FUE5PythonConsoleModule::CreatePluginWindow()
+void FFatPythonConsoleModule::CreatePluginWindow()
 {
 	PluginWindow = SNew(SWindow)
 		.Title(FText::FromString(TEXT("Simple Slate Widget")))
@@ -53,14 +50,14 @@ void FUE5PythonConsoleModule::CreatePluginWindow()
 
 	FSlateApplication::Get().AddWindow(PluginWindow.ToSharedRef());
 
-	PluginWindow->SetOnWindowClosed(FOnWindowClosed::CreateRaw(this, &FUE5PythonConsoleModule::OnWindowClosed));
+	PluginWindow->SetOnWindowClosed(FOnWindowClosed::CreateRaw(this, &FFatPythonConsoleModule::OnWindowClosed));
 }
 
-void FUE5PythonConsoleModule::OnWindowClosed(const TSharedRef<SWindow>& Window)
+void FFatPythonConsoleModule::OnWindowClosed(const TSharedRef<SWindow>& Window)
 {
 	PluginWindow.Reset();
 }
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FUE5PythonConsoleModule, UE5PythonConsole)
+IMPLEMENT_MODULE(FFatPythonConsoleModule, FFatPythonConsole)

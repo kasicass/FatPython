@@ -3,9 +3,9 @@
 using UnrealBuildTool;
 using System.IO;
 
-public class UE5PythonConsole : ModuleRules
+public class FatPythonConsole : ModuleRules
 {
-	public UE5PythonConsole(ReadOnlyTargetRules Target) : base(Target)
+	public FatPythonConsole(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
