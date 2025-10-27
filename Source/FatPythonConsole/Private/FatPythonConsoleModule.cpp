@@ -60,4 +60,4 @@ void FFatPythonConsoleModule::OnWindowClosed(const TSharedRef<SWindow>& Window)
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FFatPythonConsoleModule, FFatPythonConsole)
+IMPLEMENT_MODULE(FFatPythonConsoleModule, FatPythonConsole)

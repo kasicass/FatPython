@@ -43,4 +43,4 @@ void FFatPythonModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FFatPythonModule, UE5Python)
+IMPLEMENT_MODULE(FFatPythonModule, FatPython)
