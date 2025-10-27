@@ -10,7 +10,10 @@ public:
 	virtual void ShutdownModule() override;
 
 public:
-	TArray<FString> ScriptsPath;
+	virtual void RunString(const char *CodeString) override;
+	virtual void RunFile(const char *FilePath) override;
+	
+	TArray<FString> ScriptsPaths;
 
 private:
 	bool IsPythonVMStarted = false;
