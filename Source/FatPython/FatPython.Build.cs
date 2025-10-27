@@ -3,12 +3,12 @@
 using UnrealBuildTool;
 using System.IO;
 
-public class UE5Python : ModuleRules
+public class FatPython : ModuleRules
 {
 	// we supports windows platform only
 	private string pythonHome = "C:/Python313";
 	
-	public UE5Python(ReadOnlyTargetRules Target) : base(Target)
+	public FatPython(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
