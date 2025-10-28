@@ -14,9 +14,10 @@ PyObject* pyue_log(PyObject* self, PyObject* args)
 	if (s == NULL)
 		return PyErr_Format(PyExc_Exception, "argument can't be casted to string");
 
-	Py_DECREF(s);
-	UE_LOG(LogFatPython, Log, TEXT("unreal_engine_log"));
+	const char *utf8 = PyUnicode_AsUTF8(s);
+	UE_LOG(LogFatPython, Log, TEXT("%s"), UTF8_TO_TCHAR(utf8));
 	
+	Py_DECREF(s);
 	Py_RETURN_NONE;
 }
 
