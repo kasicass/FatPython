@@ -7,6 +7,7 @@
 #warning "Unsupported platform"
 #endif
 
+DECLARE_LOG_CATEGORY_EXTERN(LogFatPython, Log, All);
 
 class FScopePythonGIL
 {

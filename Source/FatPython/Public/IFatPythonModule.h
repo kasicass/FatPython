@@ -4,9 +4,6 @@
 #include "Modules/ModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-
-DECLARE_LOG_CATEGORY_EXTERN(LogFatPython, Log, All);
-
 class IFatPythonModule : public IModuleInterface
 {
 public:
