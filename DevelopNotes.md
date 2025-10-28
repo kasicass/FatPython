@@ -5,7 +5,12 @@
 
 ### 2025.10.28
 
-* unreal_engine.log() done!
+* unreal_engine.log()/log_warning()/log_error() done!
+* re-direct stdout/stderr to log()/log_error()
+* 使用 PyErr_Print() 打印 trackback information
+* 如果 PyRun_SimpleString() 失败
+  * 其自动调用 PyErr_Print()
+  * PyErr_Print() 会调用 PyErr_Clear()
 
 ### 2025.10.27
 
