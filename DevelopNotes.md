@@ -1,7 +1,11 @@
 ### TODO
 
-* 实现 unreal_engine.message()
+* 实现 PythonConsole
+* 实现 PythonScript Asset
 
+### 2025.10.28
+
+* unreal_engine.log() done!
 
 ### 2025.10.27
 

@@ -11,7 +11,7 @@ public:
 	{
 		return FModuleManager::LoadModuleChecked<IFatPythonModule>("FatPythonModule");
 	}
-
+	
 public:
 	virtual void RunString(const char *CodeString) = 0;
 	virtual void RunFile(const char *FilePath) = 0;

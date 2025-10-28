@@ -1,15 +1,15 @@
 #pragma once
 
-// uepy_log_error
-// uepy_log
-
-// UEPyEngine::Startup()
-// UEPyEngine::Shutdown()
+#include "CoreMinimal.h"
 
 class UEPyEngine
 {
 public:
 	static void Startup(void);
 	static void Shutdown(void);
-};
 
+	static void RunString(const char *CodeString);
+	static void RunFile(const char *FilePath);
+	
+	static TArray<FString> ScriptsPaths;
+};

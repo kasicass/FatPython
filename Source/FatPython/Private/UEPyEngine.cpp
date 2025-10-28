@@ -1,5 +1,6 @@
 #include "UEPyEngine.h"
 #include "FatPythonHeaders.h"
+#include "TimerManager.h"
 
 // unreal_engine.log()
 PyObject* pyue_log(PyObject* self, PyObject* args)
@@ -50,6 +51,8 @@ static PyObject* init_unreal_engine(void)
 // Startup & Shutdown
 //
 
+TArray<FString> UEPyEngine::ScriptsPaths;
+
 void UEPyEngine::Startup()
 {
 	PyImport_AppendInittab("unreal_engine", &init_unreal_engine);
@@ -63,4 +66,65 @@ void UEPyEngine::Shutdown()
 {
 	UE_LOG(LogFatPython, Log, TEXT("Python VM shutdown"));
 	Py_FinalizeEx();
+}
+
+void UEPyEngine::RunString(const char *CodeString)
+{
+	int ret = PyRun_SimpleString(CodeString);
+	if (ret != 0)
+	{
+		if (PyErr_ExceptionMatches(PyExc_SystemExit))
+		{
+			PyErr_Clear();
+		}
+		else
+		{
+			// TODO
+			// FatPy_LogError();
+			UE_LOG(LogFatPython, Log, TEXT("RunString() Fail!"));
+			PyErr_Clear();
+		}
+	}
+}
+
+void UEPyEngine::RunFile(const char *FilePath)
+{
+	FScopePythonGIL gil;
+
+	// find .py file
+	FString OriginalFilePath = UTF8_TO_TCHAR(FilePath);
+	FString FullPath = OriginalFilePath;
+	bool FoundFile = false;
+	if (!FPaths::FileExists(OriginalFilePath))
+	{
+		for (FString Prefix : ScriptsPaths)
+		{
+			FullPath = FPaths::Combine(Prefix, OriginalFilePath);
+			if (FPaths::FileExists(FullPath))
+			{
+				FoundFile = true;
+				break;
+			}
+		}
+	}
+	else
+	{
+		FoundFile = true;
+	}
+
+	if (!FoundFile)
+	{
+		UE_LOG(LogFatPython, Error, TEXT("RunFile(): Unable to find file: %s"), *OriginalFilePath);
+		return;
+	}
+
+	// read file content
+	FString FileContent;
+	if (!FFileHelper::LoadFileToString(FileContent, *FullPath))
+	{
+		UE_LOG(LogFatPython, Error, TEXT("RunFile(): Can't read file: %s"), *OriginalFilePath);
+		return;
+	}
+	
+	RunString(TCHAR_TO_ANSI(*FileContent));
 }
