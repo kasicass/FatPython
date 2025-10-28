@@ -11,6 +11,44 @@ DEFINE_LOG_CATEGORY(LogFatPython);
 
 #define LOCTEXT_NAMESPACE "FFatPythonModule"
 
+
+PyObject* unreal_engine_log(PyObject* self, PyObject* args)
+{
+	PyObject* msg;
+	if (!PyArg_ParseTuple(args, "O", &msg))
+	{
+		return NULL;
+	}
+
+	PyObject* s = PyObject_Str(msg);
+	if (!s)
+		return PyErr_Format(PyExc_Exception, "argument can't be casted to string");
+
+	UE_LOG(LogFatPython, Log, TEXT("unreal_engine_log"));
+	
+	Py_RETURN_NONE;
+}
+
+static PyMethodDef unreal_engine_methods[] = {
+	{"log", unreal_engine_log, METH_VARARGS, "" },
+	{NULL, NULL},	
+};
+
+PyDoc_STRVAR(unreal_engine_py_doc, "Unreal Engine FatPython module.");
+static PyModuleDef unreal_engine_module = {
+	PyModuleDef_HEAD_INIT,
+	"unreal_engine",
+	unreal_engine_py_doc,
+	-1,
+	unreal_engine_methods,
+};
+static PyObject* init_unreal_engine(void)
+{
+	PyObject* mod = PyModule_Create(&unreal_engine_module);
+	UE_LOG(LogFatPython, Log, TEXT("UE Module: %p"), mod);
+	return mod;
+}
+
 void FFatPythonModule::StartupModule()
 {
 	//GConfig->GetString()
@@ -26,12 +64,16 @@ void FFatPythonModule::StartupModule()
 	ScriptsPaths.Add(ProjectScriptsPath);
 
 	// start Python VM
+	PyImport_AppendInittab("unreal_engine", &init_unreal_engine);
+	
 	Py_InitializeEx(0);
 	IsPythonVMStarted = (bool)Py_IsInitialized();
 	UE_LOG(LogFatPython, Log, TEXT("Python VM startup: %d"), IsPythonVMStarted);
 	
 	if (!IsPythonVMStarted)
 		return;
+
+	RunString("import unreal_engine\nunreal_engine.log(\"Hello!\")");
 }
 
 void FFatPythonModule::ShutdownModule()
@@ -56,6 +98,8 @@ void FFatPythonModule::RunString(const char *CodeString)
 		{
 			// TODO
 			// FatPy_LogError();
+			UE_LOG(LogFatPython, Log, TEXT("RunString() Fail!"));
+			PyErr_Clear();
 		}
 	}
 }
