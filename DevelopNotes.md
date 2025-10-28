@@ -11,6 +11,8 @@
 * 如果 PyRun_SimpleString() 失败
   * 其自动调用 PyErr_Print()
   * PyErr_Print() 会调用 PyErr_Clear()
+* 给 unreal_engine module 增加 method
+  * 修改 UEPyEngine.cpp 中的代码即可
 
 ### 2025.10.27
 

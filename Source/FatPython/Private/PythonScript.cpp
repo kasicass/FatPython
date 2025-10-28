@@ -4,7 +4,14 @@
 
 void UPythonScript::Run()
 {
-	// IFatPythonModule::Get().RunFile(TCHAR_TO_UTF8(*fileName));
+	UEPyEngine::RunFile(TCHAR_TO_UTF8(*ScriptPath));
+
+#if 0
+	if (!FunctionToCall.IsEmpty())
+	{
+		CallSpecificFunctionWithArgs();
+	}
+#endif
 }
 
 void UPythonScript::CallSpecificFunctionWithArgs()

@@ -7,6 +7,7 @@
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 
+#include "PythonScript.h"
 
 #define LOCTEXT_NAMESPACE "FFatPythonModule"
 
@@ -26,9 +27,16 @@ void FFatPythonModule::StartupModule()
 
 	// start Python VM
 	UEPyEngine::Startup();
-	
+
+	// just for test
 	// RunString("import unreal_engine\nunreal_engine.log(\"Hello!\")");
-	RunFile("PrintTest.py");
+	// RunFile("PrintTest.py");
+#if 0
+	UPythonScript *script = NewObject<UPythonScript>();
+	script->ScriptPath = "PrintTest.py";
+	script->FunctionToCall = "print_test";
+	script->Run();
+#endif
 }
 
 void FFatPythonModule::ShutdownModule()
