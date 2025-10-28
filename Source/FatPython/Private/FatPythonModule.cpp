@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "FatPythonModule.h"
-#include "PythonHeaders.h"
+#include "FatPythonHeaders.h"
 #include "UEPyEngine.h"
 #include "HAL/PlatformFileManager.h"
 #include "GenericPlatform/GenericPlatformFile.h"

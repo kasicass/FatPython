@@ -1,5 +1,5 @@
 #include "UEPyEngine.h"
-#include "PythonHeaders.h"
+#include "FatPythonHeaders.h"
 
 // unreal_engine.log()
 PyObject* pyue_log(PyObject* self, PyObject* args)
