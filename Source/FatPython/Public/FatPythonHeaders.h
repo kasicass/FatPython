@@ -9,6 +9,8 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogFatPython, Log, All);
 
+void UEPy_LogPythonError(void);
+
 class FScopePythonGIL
 {
 public:

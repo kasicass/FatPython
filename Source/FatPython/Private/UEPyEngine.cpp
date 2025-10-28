@@ -46,6 +46,38 @@ static PyObject* init_unreal_engine(void)
 	return mod;
 }
 
+//
+// Startup Utils
+//
+
+
+static void UEPy_SetupStdoutStderr(void)
+{
+	// Redirecting stdout
+	char const* code = "import sys\n"
+		"import unreal_engine\n"
+		"class UnrealEngineOutput:\n"
+		"    def __init__(self, logger):\n"
+		"        self.logger = logger\n"
+		"    def write(self, buf):\n"
+		"        self.logger(buf)\n"
+		"    def flush(self):\n"
+		"        return\n"
+		"    def isatty(self):\n"
+		"        return False\n"
+		"sys.stdout = UnrealEngineOutput(unreal_engine.log)\n"
+		"sys.stderr = UnrealEngineOutput(unreal_engine.log_error)\n"
+		"\n"
+		"class event:\n"
+		"    def __init__(self, event_signature):\n"
+		"        self.event_signature = event_signature\n"
+		"    def __call__(self, f):\n"
+		"        f.ue_event = self.event_signature\n"
+		"        return f\n"
+		"\n"
+		"unreal_engine.event = event";
+	PyRun_SimpleString(code);
+}
 
 //
 // Startup & Shutdown
@@ -60,6 +92,8 @@ void UEPyEngine::Startup()
 	Py_InitializeEx(0);
 	int inited = Py_IsInitialized();
 	UE_LOG(LogFatPython, Log, TEXT("Python VM startup: %d"), inited);
+
+	UEPy_SetupStdoutStderr();
 }
 
 void UEPyEngine::Shutdown()
@@ -82,7 +116,7 @@ void UEPyEngine::RunString(const char *CodeString)
 			// TODO
 			// FatPy_LogError();
 			UE_LOG(LogFatPython, Log, TEXT("RunString() Fail!"));
-			PyErr_Clear();
+			PyErr_Print();
 		}
 	}
 }
