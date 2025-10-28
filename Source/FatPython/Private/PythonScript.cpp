@@ -27,8 +27,6 @@ void UPythonScript::CallSpecificFunctionWithArgs()
 	PyObject *ret = PyObject_Call(fn, args, nullptr);
 	if (!ret)
 	{
-		// TODO
-		// unreal_engine_py_log_error();
 		PyErr_Print();
 	}
 	else

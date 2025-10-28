@@ -2,6 +2,10 @@
 #include "FatPythonHeaders.h"
 #include "TimerManager.h"
 
+//
+// methods of unreal_engine module
+//
+
 // unreal_engine.log()
 PyObject* pyue_log(PyObject* self, PyObject* args)
 {
@@ -22,12 +26,54 @@ PyObject* pyue_log(PyObject* self, PyObject* args)
 	Py_RETURN_NONE;
 }
 
+// unreal_engine.log_warning()
+PyObject* pyue_log_warning(PyObject* self, PyObject* args)
+{
+	PyObject* msg;
+	if (!PyArg_ParseTuple(args, "O:log_warning", &msg))
+	{
+		return NULL;
+	}
+
+	PyObject* s = PyObject_Str(msg);
+	if (s == NULL)
+		return PyErr_Format(PyExc_Exception, "argument can't be casted to string");
+
+	const char *utf8 = PyUnicode_AsUTF8(s);
+	UE_LOG(LogFatPython, Warning, TEXT("%s"), UTF8_TO_TCHAR(utf8));
+	
+	Py_DECREF(s);
+	Py_RETURN_NONE;
+}
+
+// unreal_engine.log_error()
+PyObject* pyue_log_error(PyObject* self, PyObject* args)
+{
+	PyObject* msg;
+	if (!PyArg_ParseTuple(args, "O:log_error", &msg))
+	{
+		return NULL;
+	}
+
+	PyObject* s = PyObject_Str(msg);
+	if (s == NULL)
+		return PyErr_Format(PyExc_Exception, "argument can't be casted to string");
+
+	const char *utf8 = PyUnicode_AsUTF8(s);
+	UE_LOG(LogFatPython, Error, TEXT("%s"), UTF8_TO_TCHAR(utf8));
+	
+	Py_DECREF(s);
+	Py_RETURN_NONE;
+}
+
 //
 // unreal_engine module
 //
 
 static PyMethodDef unreal_engine_methods[] = {
 	{"log", pyue_log, METH_VARARGS, "" },
+	{"log_warning", pyue_log_warning, METH_VARARGS, "" },
+	{"log_error", pyue_log_error, METH_VARARGS, "" },
 	{NULL, NULL},	
 };
 
@@ -49,7 +95,6 @@ static PyObject* init_unreal_engine(void)
 //
 // Startup Utils
 //
-
 
 static void UEPy_SetupStdoutStderr(void)
 {
@@ -104,21 +149,7 @@ void UEPyEngine::Shutdown()
 
 void UEPyEngine::RunString(const char *CodeString)
 {
-	int ret = PyRun_SimpleString(CodeString);
-	if (ret != 0)
-	{
-		if (PyErr_ExceptionMatches(PyExc_SystemExit))
-		{
-			PyErr_Clear();
-		}
-		else
-		{
-			// TODO
-			// FatPy_LogError();
-			UE_LOG(LogFatPython, Log, TEXT("RunString() Fail!"));
-			PyErr_Print();
-		}
-	}
+	PyRun_SimpleString(CodeString); // auto-call PyErr_Print() when fail
 }
 
 void UEPyEngine::RunFile(const char *FilePath)
