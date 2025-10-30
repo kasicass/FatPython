@@ -2,6 +2,7 @@
 
 #include "FatPythonConsoleModule.h"
 #include "SSimpleSlateWidget.h"
+#include "SPythonLog.h"
 #include "Widgets/Docking/SDockTab.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Editor/WorkspaceMenuStructure/Public/WorkspaceMenuStructure.h"
@@ -11,17 +12,21 @@
 
 static const FName FatPythonLogTabName(TEXT("FatPythonLog"));
 
-TSharedRef<SDockTab> SpawnPythonLog(const FSpawnTabArgs& Args)
+static TSharedRef<SDockTab> SpawnPythonLog(const FSpawnTabArgs& Args)
 {
-	return SNew(SDockTab);
-		//.Icon(FAppStyle::GetBrush("Log.TabIcon"));
+	return SNew(SDockTab)
+		.TabRole(ETabRole::NomadTab)
+		.Label(NSLOCTEXT("PythonConsole", "TabTitle", "Python Console"))
+		[
+			SNew(SPythonLog)
+		];
 }
 
 void FFatPythonConsoleModule::StartupModule()
 {
 	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(FatPythonLogTabName, FOnSpawnTab::CreateStatic(&SpawnPythonLog))
-		.SetDisplayName(NSLOCTEXT("UnrealEditor", "PythonLogTab", "Python Console"))
-		.SetTooltipText(NSLOCTEXT("UnrealEditor", "PythonLogTooltipText", "Open the Python Console tab."))
+		.SetDisplayName(NSLOCTEXT("UnrealEditor", "PythonLogTab", "FatPython Console"))
+		.SetTooltipText(NSLOCTEXT("UnrealEditor", "PythonLogTooltipText", "Open the FatPython Console."))
 		.SetGroup( WorkspaceMenu::GetMenuStructure().GetDeveloperToolsLogCategory() )
 		.SetIcon( FSlateIcon(FAppStyle::GetAppStyleSetName(), "Log.TabIcon") );
 	
@@ -30,6 +35,11 @@ void FFatPythonConsoleModule::StartupModule()
 
 void FFatPythonConsoleModule::ShutdownModule()
 {
+	if (FSlateApplication::IsInitialized())
+	{
+		FGlobalTabmanager::Get()->UnregisterNomadTabSpawner(FatPythonLogTabName);
+	}
+	
 	if (PluginWindow.IsValid())
 	{
 		PluginWindow->RequestDestroyWindow();
