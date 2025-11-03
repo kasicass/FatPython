@@ -1,6 +1,7 @@
 ### TODO
 
 * 实现 PythonConsole
+* 实现 SPythonLog
 * 实现 UPythonScript Asset
 
 ### 2025.10.28

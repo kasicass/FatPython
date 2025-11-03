@@ -12,13 +12,48 @@
 
 static const FName FatPythonLogTabName(TEXT("FatPythonLog"));
 
+// This class is to capture all log output even if the log window is closed
+class FPythonLogHistory : public FOutputDevice
+{
+public:
+	FPythonLogHistory()
+	{
+		GLog->AddOutputDevice(this);
+		GLog->SerializeBacklog(this);
+	}
+
+	~FPythonLogHistory()
+	{
+		if (GLog != nullptr)
+		{
+			GLog->RemoveOutputDevice(this);
+		}
+	}
+
+	const TArray<TSharedPtr<FLogMessage>>& GetMessages() const
+	{
+		return Messages;
+	}
+
+protected:
+	virtual void Serialize( const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category ) override
+	{
+		SPythonLog::CreateLogMessages(V, Verbosity, Category, Messages);
+	}
+
+private:
+	TArray<TSharedPtr<FLogMessage>> Messages;
+};
+
+static TSharedPtr<FPythonLogHistory> PythonLogHistory = MakeShareable(new FPythonLogHistory());
+
 static TSharedRef<SDockTab> SpawnPythonLog(const FSpawnTabArgs& Args)
 {
 	return SNew(SDockTab)
 		.TabRole(ETabRole::NomadTab)
 		.Label(NSLOCTEXT("PythonConsole", "TabTitle", "Python Console"))
 		[
-			SNew(SPythonLog)
+			SNew(SPythonLog).Messages(PythonLogHistory->GetMessages())
 		];
 }
 

@@ -33,8 +33,7 @@ public:
 
 protected:
 	FPythonLogTextLayoutMarshaller(TArray< TSharedPtr<FLogMessage> > InMessages);
-
-	void AppendMessageToTextLayout(const TSharedPtr<FLogMessage>& InMessage);
+	
 	void AppendMessagesToTextLayout(const TArray<TSharedPtr<FLogMessage>>& InMessages);
 
 private:
@@ -54,6 +53,10 @@ private:
 // as well as a combo box for entering in new commands
 class SPythonLog : public SCompoundWidget, public FOutputDevice
 {
+public:
+	static bool CreateLogMessages(const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category, TArray< TSharedPtr<FLogMessage> >& OutMessages);
+	
+public:
 	SLATE_BEGIN_ARGS(SPythonLog) {}
 		// All messages captured before this log window has been created
 		SLATE_ARGUMENT(TArray<TSharedPtr<FLogMessage>>, Messages)
@@ -67,6 +70,9 @@ protected:
 	virtual void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const FName& Category) override;
 
 private:
+	// Converts the array of messages into something the text box understands
+	TSharedPtr<FPythonLogTextLayoutMarshaller> MessagesTextMarshaller;
+	
 	// The editable text showing all log messages
 	TSharedPtr<SMultiLineEditableTextBox> MessagesTextBox;
 };
