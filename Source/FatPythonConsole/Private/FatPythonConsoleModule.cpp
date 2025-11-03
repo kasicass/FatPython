@@ -10,7 +10,7 @@
 
 #define LOCTEXT_NAMESPACE "FFatPythonConsoleModule"
 
-static const FName FatPythonLogTabName(TEXT("FatPythonLog"));
+static const FName FatPythonLogTabName = FName(TEXT("FatPythonLog"));
 
 // This class is to capture all log output even if the log window is closed
 class FPythonLogHistory : public FOutputDevice

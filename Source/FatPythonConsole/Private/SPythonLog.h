@@ -69,7 +69,15 @@ public:
 protected:
 	virtual void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const FName& Category) override;
 
-	// void ExtendText
+	void ExtendTextBoxMenu(FMenuBuilder& Builder);
+
+	void OnClearLog();
+
+	void OnUserScrolled(float ScrollOffset);
+
+	bool CanClearLog() const;
+
+	void RequestForceScroll();
 	
 private:
 	// Converts the array of messages into something the text box understands

@@ -74,7 +74,8 @@ void FPythonLogTextLayoutMarshaller::AppendMessagesToTextLayout(const TArray<TSh
 		LinesToAdd.Emplace(MoveTemp(LineText), MoveTemp(Runs));
 	}
 
-	TextLayout->AddLines(LinesToAdd);
+	//if (TextLayout)
+	//	TextLayout->AddLines(LinesToAdd);
 }
 
 void FPythonLogTextLayoutMarshaller::ClearMessages()
@@ -150,8 +151,8 @@ void SPythonLog::Construct(const FArguments& InArgs)
 		.Marshaller(MessagesTextMarshaller)
 		.IsReadOnly(true)
 		.AlwaysShowScrollbars(true)
-		//.OnVScrollBarUserScrolled(this, &SPythonLog::OnUserScrolled)
-		//.ContextMenuExtender(this, &SPythonLog::ExtendTextBoxMenu)
+		.OnVScrollBarUserScrolled(this, &SPythonLog::OnUserScrolled)
+		.ContextMenuExtender(this, &SPythonLog::ExtendTextBoxMenu)
 		;
 
 	ChildSlot
@@ -184,6 +185,9 @@ void SPythonLog::Construct(const FArguments& InArgs)
 	{
 		GLog->AddOutputDevice(this);
 	}
+
+	bIsUserScrolled = false;
+	RequestForceScroll();
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
@@ -203,5 +207,48 @@ void SPythonLog::Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const 
 		{
 			MessagesTextBox->ScrollTo(FTextLocation(MessagesTextMarshaller->GetNumMessages() - 1));
 		}
+	}
+}
+
+void SPythonLog::ExtendTextBoxMenu(FMenuBuilder& Builder)
+{
+	FUIAction ClearPythonLogAction(
+		FExecuteAction::CreateRaw(this, &SPythonLog::OnClearLog),
+		FCanExecuteAction::CreateSP(this, &SPythonLog::CanClearLog)
+		);
+
+	Builder.AddMenuEntry(
+		NSLOCTEXT("PythonConsole", "ClearLogLabel", "Clear Log"),
+		NSLOCTEXT("PythonConsole", "ClearLogTooltip", "Clears all log messages"),
+		FSlateIcon(),
+		ClearPythonLogAction
+		);
+}
+
+void SPythonLog::OnClearLog()
+{
+	MessagesTextBox->GoTo(FTextLocation(0));
+
+	MessagesTextMarshaller->ClearMessages();
+	MessagesTextBox->Refresh();
+	bIsUserScrolled = false;
+}
+
+void SPythonLog::OnUserScrolled(float ScrollOffset)
+{
+	bIsUserScrolled = !FMath::IsNearlyEqual(ScrollOffset, 1.0f);
+}
+
+bool SPythonLog::CanClearLog() const
+{
+	return MessagesTextMarshaller->GetNumMessages() > 0;
+}
+
+void SPythonLog::RequestForceScroll()
+{
+	if (MessagesTextMarshaller->GetNumMessages() > 0)
+	{
+		MessagesTextBox->ScrollTo(FTextLocation(MessagesTextMarshaller->GetNumMessages() - 1));
+		bIsUserScrolled = false;
 	}
 }
