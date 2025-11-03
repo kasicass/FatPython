@@ -27,6 +27,7 @@ public class FatPythonConsole : ModuleRules
 			new string[]
 			{
 				"Core",
+				"FatPython",
 			}
 			);
 			
