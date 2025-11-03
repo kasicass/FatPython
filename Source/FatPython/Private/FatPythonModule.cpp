@@ -31,10 +31,10 @@ void FFatPythonModule::StartupModule()
 	// just for test
 	// RunString("import unreal_engine\nunreal_engine.log(\"Hello!\")");
 	// RunFile("PrintTest.py");
-#if 0
+#if 1
 	UPythonScript *script = NewObject<UPythonScript>();
 	script->ScriptPath = "PrintTest.py";
-	script->FunctionToCall = "print_test";
+	//script->FunctionToCall = "print_test";
 	script->Run();
 #endif
 }

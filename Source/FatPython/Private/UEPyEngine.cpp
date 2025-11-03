@@ -66,6 +66,20 @@ PyObject* pyue_log_error(PyObject* self, PyObject* args)
 	Py_RETURN_NONE;
 }
 
+// unreal_engine.shutdown()
+PyObject* pyue_shutdown(PyObject* self, PyObject* args)
+{
+	RequestEngineExit(TEXT("Shutdown from FatPython"));
+	Py_RETURN_NONE;
+}
+
+// unreal_engine.get_content_dir()
+PyObject* pyue_get_content_dir(PyObject* self, PyObject* args)
+{
+	return PyUnicode_FromString(TCHAR_TO_UTF8(*FPaths::ProjectContentDir()));
+}
+
+
 //
 // unreal_engine module
 //
@@ -74,6 +88,8 @@ static PyMethodDef unreal_engine_methods[] = {
 	{"log", pyue_log, METH_VARARGS, "" },
 	{"log_warning", pyue_log_warning, METH_VARARGS, "" },
 	{"log_error", pyue_log_error, METH_VARARGS, "" },
+	{"shutdown", pyue_shutdown, METH_VARARGS, "" },
+	{"get_content_dir", pyue_get_content_dir, METH_VARARGS, "" },
 	{NULL, NULL},	
 };
 

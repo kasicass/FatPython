@@ -1,8 +1,11 @@
 ### TODO
 
 * 实现 PythonConsole
-* 实现 SPythonLog
 * 实现 UPythonScript Asset
+
+### 2025.11.03
+
+* 实现 SPythonLog（暂时会 crash）
 
 ### 2025.10.28
 
