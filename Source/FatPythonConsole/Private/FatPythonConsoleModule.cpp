@@ -18,8 +18,11 @@ class FPythonLogHistory : public FOutputDevice
 public:
 	FPythonLogHistory()
 	{
-		GLog->AddOutputDevice(this);
-		GLog->SerializeBacklog(this);
+		if (GLog)
+		{
+			GLog->AddOutputDevice(this);
+			GLog->SerializeBacklog(this);
+		}
 	}
 
 	~FPythonLogHistory()

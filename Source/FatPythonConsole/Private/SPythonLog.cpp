@@ -1,5 +1,4 @@
 #include "SPythonLog.h"
-#include "Framework/Text/SlateTextLayout.h"
 #include "SlateBasics.h"
 
 
@@ -143,6 +142,8 @@ bool SPythonLog::CreateLogMessages(const TCHAR* V, ELogVerbosity::Type Verbosity
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SPythonLog::Construct(const FArguments& InArgs)
 {
+	MessagesTextMarshaller = FPythonLogTextLayoutMarshaller::Create(InArgs._Messages);
+	
 	MessagesTextBox = SNew(SMultiLineEditableTextBox)
 		.Style(FAppStyle::Get(), "Log.TextBox")
 		.ForegroundColor(FLinearColor::Gray)
@@ -179,13 +180,16 @@ void SPythonLog::Construct(const FArguments& InArgs)
 		// TODO
 	];
 
-	GLog->AddOutputDevice(this);
+	if (GLog)
+	{
+		GLog->AddOutputDevice(this);
+	}
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 SPythonLog::~SPythonLog()
 {
-	if (GLog != NULL)
+	if (GLog)
 	{
 		GLog->RemoveOutputDevice(this);
 	}
@@ -193,5 +197,11 @@ SPythonLog::~SPythonLog()
 
 void SPythonLog::Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const FName& Category)
 {
-	
+	if (MessagesTextMarshaller->AppendMessage(V, Verbosity, Category))
+	{
+		if (!bIsUserScrolled)
+		{
+			MessagesTextBox->ScrollTo(FTextLocation(MessagesTextMarshaller->GetNumMessages() - 1));
+		}
+	}
 }

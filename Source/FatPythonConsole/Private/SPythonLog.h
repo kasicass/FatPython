@@ -69,10 +69,15 @@ public:
 protected:
 	virtual void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const FName& Category) override;
 
+	// void ExtendText
+	
 private:
 	// Converts the array of messages into something the text box understands
 	TSharedPtr<FPythonLogTextLayoutMarshaller> MessagesTextMarshaller;
 	
 	// The editable text showing all log messages
 	TSharedPtr<SMultiLineEditableTextBox> MessagesTextBox;
+
+	// True if the user has scrolled the window upwards
+	bool bIsUserScrolled;
 };
