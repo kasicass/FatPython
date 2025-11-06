@@ -1,6 +1,7 @@
 #include "UEPyEngine.h"
 #include "FatPythonHeaders.h"
 #include "TimerManager.h"
+#include "Wrappers/UEPyFColor.h"
 
 //
 // methods of unreal_engine module
@@ -105,6 +106,8 @@ static PyObject* init_unreal_engine(void)
 {
 	PyObject* mod = PyModule_Create(&unreal_engine_module);
 	UE_LOG(LogFatPython, Log, TEXT("UE Module: %p"), mod);
+	
+	pyue_init_fcolor(mod);
 	return mod;
 }
 
