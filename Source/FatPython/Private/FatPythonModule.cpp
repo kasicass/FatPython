@@ -16,14 +16,16 @@ void FFatPythonModule::StartupModule()
 	//GConfig->GetString()
 
 	// init ScriptsPaths
-	FPaths::ProjectContentDir();
-
-	FString ProjectScriptsPath = FPaths::Combine(FPaths::ProjectContentDir(), UTF8_TO_TCHAR("Scripts"));
+	FString ContentDir = FPaths::ProjectContentDir();
+	FString ProjectScriptsPath = FPaths::Combine(ContentDir, TEXT("Scripts"));
 	if (!FPaths::DirectoryExists(ProjectScriptsPath))
 	{
 		FPlatformFileManager::Get().GetPlatformFile().CreateDirectory(*ProjectScriptsPath);
 	}
 	UEPyEngine::ScriptsPaths.Add(ProjectScriptsPath);
+
+	FString FatPythonPath = FPaths::Combine(ContentDir, TEXT("../Plugins/FatPython"));
+	UEPyEngine::ScriptsPaths.Add(FatPythonPath);
 
 	// start Python VM
 	UEPyEngine::Startup();
@@ -34,6 +36,10 @@ void FFatPythonModule::StartupModule()
 #if 1
 	UPythonScript *script = NewObject<UPythonScript>();
 	script->ScriptPath = "PrintTest.py";
+	//script->FunctionToCall = "print_test";
+	script->Run();
+	
+	script->ScriptPath = "run_tests.py";
 	//script->FunctionToCall = "print_test";
 	script->Run();
 #endif

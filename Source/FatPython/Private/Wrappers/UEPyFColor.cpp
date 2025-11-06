@@ -174,7 +174,7 @@ static PySequenceMethods pyue_FColor_sequence_methods = {
 
 static PyObject *pyue_FColor_str(pyue_FColor *self)
 {
-	return PyUnicode_FromFormat("<unreal_engine.FVector {'r': %d, 'g': %d, 'b': %d, 'a': %d}>",
+	return PyUnicode_FromFormat("<unreal_engine.FColor {'r': %d, 'g': %d, 'b': %d, 'a': %d}>",
 		self->color.R, self->color.G, self->color.B, self->color.A);
 }
 
