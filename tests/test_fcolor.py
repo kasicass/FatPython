@@ -8,4 +8,3 @@ class TestFColor(unittest.TestCase):
         self.assertEqual(c.g, 2)
         self.assertEqual(c.b, 3)
         self.assertEqual(c.a, 4)
-        print('FColor - test_create')
