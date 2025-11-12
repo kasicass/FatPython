@@ -99,8 +99,135 @@ static PyObject *pyue_iplugin_get_can_contain_content(pyue_IPlugin *self, void *
 	}
 }
 
+static PyObject *pyue_iplugin_get_enabled_by_default(pyue_IPlugin *self, void *closure)
+{
+	if (self->plugin->GetDescriptor().EnabledByDefault == EPluginEnabledByDefault::Enabled)
+	{
+		Py_RETURN_TRUE;
+	}
+	else
+	{
+		Py_RETURN_FALSE;
+	}
+}
+
+static PyObject *pyue_iplugin_get_installed(pyue_IPlugin *self, void *closure)
+{
+	if (self->plugin->GetDescriptor().bInstalled)
+	{
+		Py_RETURN_TRUE;
+	}
+	else
+	{
+		Py_RETURN_FALSE;
+	}
+}
+
+static PyObject *pyue_iplugin_get_is_beta_version(pyue_IPlugin *self, void *closure)
+{
+	if (self->plugin->GetDescriptor().bIsBetaVersion)
+	{
+		Py_RETURN_TRUE;
+	}
+	else
+	{
+		Py_RETURN_FALSE;
+	}
+}
+
+static PyObject *pyue_iplugin_get_created_by(pyue_IPlugin *self, void *closure)
+{
+	return PyUnicode_FromString(TCHAR_TO_UTF8(*(self->plugin->GetDescriptor().CreatedBy)));
+}
+
 static PyGetSetDef pyue_IPlugin_getsetters[] = {
+	{"category", (getter)pyue_iplugin_get_category, NULL, "", NULL},
+	{"can_contain_content", (getter)pyue_iplugin_get_can_contain_content, NULL, "", NULL},
+	{"enabled_by_default", (getter)pyue_iplugin_get_enabled_by_default, NULL, "", NULL},
+	{"installed", (getter)pyue_iplugin_get_installed, NULL, "", NULL},
+	{"is_beta_version", (getter)pyue_iplugin_get_is_beta_version, NULL, "", NULL},
+	{"created_by", (getter)pyue_iplugin_get_created_by, NULL, "", NULL},
 	{NULL}
 };
+
+//
+// pyue_IPlugin type
+//
+
+static PyObject *pyue_IPlugin_str(pyue_IPlugin *self)
+{
+	return PyUnicode_FromFormat("<unreal_engine.IPlugin {'name': '%s'}>",
+		TCHAR_TO_UTF8(*self->plugin->GetName()));
+}
+
+PyTypeObject pyue_IPluginType = {
+	PyVarObject_HEAD_INIT(NULL, 0)
+	"unreal_engine.IPlugin",
+	sizeof(pyue_IPlugin),
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	(reprfunc) pyue_IPlugin_str,
+	0,
+	0,
+	0,
+	Py_TPFLAGS_DEFAULT,
+	"Unreal Engine Editor IPlugin",
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	pyue_IPlugin_methods,
+	0,
+	pyue_IPlugin_getsetters,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	PyType_GenericNew,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+};
+
+void pyue_init_iplugin(PyObject *module)
+{
+	if (PyType_Ready(&pyue_IPluginType) < 0)
+		return;
+
+	Py_INCREF(&pyue_IPluginType);
+	PyModule_AddObject(module, "IPlugin", (PyObject *)&pyue_IPluginType);
+}
+
+PyObject *pyue_new_iplugin(IPlugin *plugin)
+{
+	pyue_IPlugin *ret = (pyue_IPlugin *)PyObject_New(pyue_IPlugin, &pyue_IPluginType);
+	ret->plugin = plugin;
+	return (PyObject *)ret;
+}
 
 #endif

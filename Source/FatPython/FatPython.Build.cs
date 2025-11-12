@@ -53,6 +53,17 @@ public class FatPython : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
+
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.AddRange(
+				new string[]
+				{
+					"UnrealEd",
+					"Projects",
+				}
+			);
+		}
 		
 		// add python path
 		System.Console.WriteLine("Using Python at: " + pythonHome);

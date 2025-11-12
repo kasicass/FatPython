@@ -35,9 +35,9 @@ void FFatPythonModule::StartupModule()
 	// RunFile("PrintTest.py");
 #if 1
 	UPythonScript *script = NewObject<UPythonScript>();
-	script->ScriptPath = "PrintTest.py";
+	//script->ScriptPath = "PrintTest.py";
 	//script->FunctionToCall = "print_test";
-	script->Run();
+	//script->Run();
 	
 	script->ScriptPath = "run_tests.py";
 	//script->FunctionToCall = "print_test";

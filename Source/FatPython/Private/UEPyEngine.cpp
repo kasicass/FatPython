@@ -2,6 +2,8 @@
 #include "FatPythonHeaders.h"
 #include "TimerManager.h"
 #include "Wrappers/UEPyFColor.h"
+#include "Wrappers/UEPyEditor.h"
+#include "Wrappers/UEPyIPlugin.h"
 
 //
 // methods of unreal_engine module
@@ -80,7 +82,6 @@ PyObject* pyue_get_content_dir(PyObject* self, PyObject* args)
 	return PyUnicode_FromString(TCHAR_TO_UTF8(*FPaths::ProjectContentDir()));
 }
 
-
 //
 // unreal_engine module
 //
@@ -91,6 +92,8 @@ static PyMethodDef unreal_engine_methods[] = {
 	{"log_error", pyue_log_error, METH_VARARGS, "" },
 	{"shutdown", pyue_shutdown, METH_VARARGS, "" },
 	{"get_content_dir", pyue_get_content_dir, METH_VARARGS, "" },
+
+	{"find_plugin", pyue_find_plugin, METH_VARARGS, ""},
 	{NULL, NULL},	
 };
 
@@ -108,6 +111,7 @@ static PyObject* init_unreal_engine(void)
 	UE_LOG(LogFatPython, Log, TEXT("UE Module: %p"), mod);
 	
 	pyue_init_fcolor(mod);
+	pyue_init_iplugin(mod);
 	return mod;
 }
 
